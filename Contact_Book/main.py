@@ -9,7 +9,7 @@ class ContactBook(QMainWindow):
         self.initUI()
     
     def initUI(self):
-        pass
+        self.setWindowTitle("Contact Book")
 
 # Create the application object
 app = QApplication(sys.argv)
