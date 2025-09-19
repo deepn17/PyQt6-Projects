@@ -1,4 +1,5 @@
-from PyQt6.QtWidgets import (QMainWindow, QApplication, QWidget)
+from PyQt6.QtWidgets import (QMainWindow, QApplication, QWidget,
+                             QVBoxLayout, QGroupBox)
 import sys
 
 # Define the main window class for the contact book application
@@ -9,7 +10,23 @@ class ContactBook(QMainWindow):
         self.initUI()
     
     def initUI(self):
-        self.setWindowTitle("Contact Book")
+        self.setWindowTitle("Contact Book") # Sets the title of the main window
+        self.setGeometry(100, 100, 500, 600) # Sets the position and size of the window
+
+
+        # Central Widget and Layout
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        main_layout = QVBoxLayout(central_widget)
+
+        # Add Contact Group
+        add_group = QGroupBox("Add New Contact")
+        add_layout = QVBoxLayout()
+
+        add_group.setLayout(add_layout)
+        main_layout.addWidget(add_group)
+
+
 
 # Create the application object
 app = QApplication(sys.argv)
