@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (QMainWindow, QApplication, QWidget,
                              QVBoxLayout, QGroupBox, QLabel,
-                             QHBoxLayout, QLineEdit)
+                             QHBoxLayout, QLineEdit, QPushButton)
 import sys
 
 # Define the main window class for the contact book application
@@ -48,7 +48,12 @@ class ContactBook(QMainWindow):
         email_layout.addWidget(self.email_input)
         add_layout.addLayout(email_layout)
 
+        # Add button
+        self.add_btn = QPushButton("Add Contact")
+        add_layout.addWidget(self.add_btn)
+
         add_group.setLayout(add_layout)
+        # Code for actioning the Add button
         main_layout.addWidget(add_group)
 
 
