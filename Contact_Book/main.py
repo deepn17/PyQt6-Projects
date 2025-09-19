@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import (QMainWindow, QApplication, QWidget,
                              QVBoxLayout, QGroupBox, QLabel,
-                             QHBoxLayout, QLineEdit, QPushButton)
+                             QHBoxLayout, QLineEdit, QPushButton,
+                             QListWidget)
 import sys
 
 # Define the main window class for the contact book application
@@ -59,6 +60,16 @@ class ContactBook(QMainWindow):
         add_group.setLayout(add_layout)  # Set the layout for the group box
         # Add the group box to the main layout of the central widget
         main_layout.addWidget(add_group)
+
+        
+
+        # --- Contact List ---
+        contact_label = QLabel("Contacts:")
+        main_layout.addWidget(contact_label)
+        self.contact_list = QListWidget()
+        # Add Action item for contact list
+        main_layout.addWidget(self.contact_list)
+
 
 
 
