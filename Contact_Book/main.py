@@ -66,7 +66,6 @@ class ContactBook(QMainWindow):
         main_layout.addWidget(add_group)
 
         
-
         # --- Contact List ---
         contact_label = QLabel("Contacts:")
         main_layout.addWidget(contact_label)
@@ -79,6 +78,7 @@ class ContactBook(QMainWindow):
         # Delete button and save button
         button_layout = QHBoxLayout()
         self.delete_btn = QPushButton("Delete Selected")
+        self.delete_btn.clicked.connect(self.delete_contact)
         button_layout.addWidget(self.delete_btn)
 
         self.save_btn = QPushButton("Save Contacts")
@@ -87,7 +87,6 @@ class ContactBook(QMainWindow):
 
         main_layout.addLayout(button_layout)
 
-    
 
     def add_contact(self):
         # get input values
@@ -121,6 +120,26 @@ class ContactBook(QMainWindow):
         details = f"Name: {name} \nPhone: {contact['phone']} \nEmail: {contact['email']}"
         QMessageBox.information(self, "Contact Details", details)
     
+    def delete_contact(self):
+        """Delete the selected contact from the list and contacts dictionary"""
+        current_item = self.contact_list.currentItem()
+        if current_item:
+            name = current_item.text()
+            reply = QMessageBox.question(self, "Confirm Delete",
+                                         f"Are you sure you want to delete '{name}'?",
+                                         QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+                                         )
+            if reply == QMessageBox.StandardButton.Yes:
+                # Remove from contacts dictionary
+                self.contacts.pop(name, None)
+                # Update the list widget
+                self.update_contact_list()
+                # save changes
+                self.save_contacts()
+                QMessageBox.information(self, "Deleted", f"Contact '{name}' deleted.")
+        else:
+            QMessageBox.warning(self, "No Selection", "Please select a contact to delete.")
+
 
     def save_contacts(self):
         """Save contacts to contacts.json"""
@@ -142,8 +161,6 @@ class ContactBook(QMainWindow):
             self.contacts = {}
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Could not load contacts: {e}")
-
-
 
 
 # Create the application object
