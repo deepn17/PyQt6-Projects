@@ -65,6 +65,17 @@ class ContactBook(QMainWindow):
         # Add the group box to the main layout of the central widget
         main_layout.addWidget(add_group)
 
+
+        # --- Search Box ---
+        search_layout = QHBoxLayout()
+        search_label = QLabel("Search:")
+        search_layout.addWidget(search_label)
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText("Type to search contacts...")
+        self.search_input.textChanged.connect(self.search_contacts)
+        search_layout.addWidget(self.search_input)
+        main_layout.addLayout(search_layout)
+
         
         # --- Contact List ---
         contact_label = QLabel("Contacts:")
@@ -112,6 +123,15 @@ class ContactBook(QMainWindow):
         self.contact_list.clear()
         for name in sorted(self.contacts.keys()):
             self.contact_list.addItem(name)
+    
+    def search_contacts(self):
+        """Filter the contact list based on the search input"""
+        search_term = self.search_input.text().strip().lower()
+        self.contact_list.clear()
+
+        for name in sorted(self.contacts.keys()):
+            if search_term in name.lower():
+                self.contact_list.addItem(name)
     
     def show_contact_details(self, item):
         """Display phone and email for the selected contact"""
