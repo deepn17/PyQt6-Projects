@@ -1,14 +1,16 @@
 from PyQt6.QtWidgets import (QMainWindow, QApplication, QWidget,
                              QVBoxLayout, QGroupBox, QLabel,
                              QHBoxLayout, QLineEdit, QPushButton,
-                             QListWidget)
+                             QListWidget, QMessageBox)
 import sys
+import json
 
 # Define the main window class for the contact book application
 class ContactBook(QMainWindow):
 
     def __init__(self):
         super().__init__() # Initialize the parent QMainWindow
+        self.contacts = {}
         self.initUI() # Set up the user interface
     
     def initUI(self):
@@ -54,6 +56,7 @@ class ContactBook(QMainWindow):
         # --- Add Contact button ---
         self.add_btn = QPushButton("Add Contact") # Button to add contact
          # Code for actioning the Add button
+        self.add_btn.clicked.connect(self.add_contact)
         add_layout.addWidget(self.add_btn)     # Add button to group box layout
 
 
@@ -69,7 +72,32 @@ class ContactBook(QMainWindow):
         self.contact_list = QListWidget()
         # Add Action item for contact list
         main_layout.addWidget(self.contact_list)
+    
 
+    def add_contact(self):
+        # get input values
+        name = self.name_input.text().strip()
+        phone = self.phone_input.text().strip()
+        email = self.email_input.text().strip()
+
+        # simple validation
+        if not name:
+            QMessageBox.warning(self, "Warning", "Name cannot be empty")
+            return
+        self.contacts[name] = {"phone": phone, "email": email}
+        self.update_contact_list()
+        
+        # clear inputs
+        self.name_input.clear()
+        self.phone_input.clear()
+        self.email_input.clear()
+
+        QMessageBox.information(self, "Success", f"Contact {name} added!")
+    
+    def update_contact_list(self):
+        self.contact_list.clear()
+        for name in sorted(self.contacts.keys()):
+            self.contact_list.addItem(name)
 
 
 
