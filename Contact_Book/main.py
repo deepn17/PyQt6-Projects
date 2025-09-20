@@ -12,6 +12,7 @@ class ContactBook(QMainWindow):
         super().__init__() # Initialize the parent QMainWindow
         self.contacts = {}
         self.initUI() # Set up the user interface
+        self.load_contacts()
     
     def initUI(self):
         # Set the window title and size
@@ -71,7 +72,21 @@ class ContactBook(QMainWindow):
         main_layout.addWidget(contact_label)
         self.contact_list = QListWidget()
         # Add Action item for contact list
+        self.contact_list.itemClicked.connect(self.show_contact_details)
         main_layout.addWidget(self.contact_list)
+
+
+        # Delete button and save button
+        button_layout = QHBoxLayout()
+        self.delete_btn = QPushButton("Delete Selected")
+        button_layout.addWidget(self.delete_btn)
+
+        self.save_btn = QPushButton("Save Contacts")
+        self.save_btn.clicked.connect(self.save_contacts)
+        button_layout.addWidget(self.save_btn)
+
+        main_layout.addLayout(button_layout)
+
     
 
     def add_contact(self):
@@ -98,6 +113,36 @@ class ContactBook(QMainWindow):
         self.contact_list.clear()
         for name in sorted(self.contacts.keys()):
             self.contact_list.addItem(name)
+    
+    def show_contact_details(self, item):
+        """Display phone and email for the selected contact"""
+        name = item.text()
+        contact = self.contacts[name]
+        details = f"Name: {name} \nPhone: {contact['phone']} \nEmail: {contact['email']}"
+        QMessageBox.information(self, "Contact Details", details)
+    
+
+    def save_contacts(self):
+        """Save contacts to contacts.json"""
+        try:
+            with open("contacts.json", "w") as f:
+                json.dump(self.contacts, f)
+            QMessageBox.information(self, "Success", "Contacts Saved.")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Could not save contacts: {e}")
+    
+
+    def load_contacts(self):
+        """Load contacts from contacts.json if it exists"""
+        try:
+            with open("contacts.json", "r") as f:
+                self.contacts = json.load(f)
+            self.update_contact_list()
+        except FileNotFoundError:
+            self.contacts = {}
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Could not load contacts: {e}")
+
 
 
 
